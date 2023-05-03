@@ -1,4 +1,4 @@
-const OPEN_WEATHER_API_KEY = ''
+const OPEN_WEATHER_API_KEY = '5a3a212fcde5435837bad4b542c8ba80';
 
 export interface OpenWeatherData {
   name: string;
@@ -22,14 +22,24 @@ export interface OpenWeatherData {
   };
 }
 
+export type OpenWeatherTempScale = 'metric' | 'imperial';
 
-export async function fetchOpenWeatherData(city: string): Promise<any> {
+export async function fetchOpenWeatherData(
+  city: string,
+  tempScale: OpenWeatherTempScale
+): Promise<OpenWeatherData> {
+  const res = await fetch(
+    `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=${tempScale}&appid=${OPEN_WEATHER_API_KEY}`
+  );
 
-    const res = await fetch(``)
-    if(!res.ok){
-        throw new Error('City not found')
-    }
+  if (!res.ok) {
+    throw new Error('City not found');
+  }
 
-    const data = await res.json()
+  const data: OpenWeatherData = await res.json();
+  return data;
+}
 
+export function getWeatherIconSrc(iconCode: string){
+  return `https://openweathermap.org/img/wn/${iconCode}@2x.png`
 }
